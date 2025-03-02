@@ -9,6 +9,11 @@ class HillClimbingSolution(Solution, ABC):
 
 
 def hill_climbing(initial_solution: HillClimbingSolution, maximization=False, max_iter=99999, verbose=False):
+
+    # Verify initial solution type
+    if not isinstance(initial_solution, HillClimbingSolution):
+        raise TypeError("Initial solution must inherit from HillClimbingSolution")
+
     current = initial_solution
     improved = True
     iter = 1
