@@ -18,7 +18,6 @@ import random
 from copy import deepcopy
 
 from library.solution import Solution
-from library.algorithms.hill_climbing import HillClimbingSolution
 
 class IntBinSolution(Solution):
     """The IntBin Optimization problem aims at finding the integer number
@@ -45,7 +44,7 @@ class IntBinSolution(Solution):
         return self.repr.count('1')
 
 # Algorithm specific
-class IntBinHillClimbingSolution(IntBinSolution, HillClimbingSolution):
+class IntBinHillClimbingSolution(IntBinSolution):
     def get_neighbors(self):
         neighbors = []
         # Convert binary string to list of bits

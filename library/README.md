@@ -12,31 +12,32 @@ The library follows a structured approach:
 2. **Problem-Specific Solution Classes**
 
 - Extend `Solution` and implement problem-specific methods.
-- Implements the `fitness()` and `random_initial_value()` methods.
+- Implements the `fitness()` and `random_initial_value()` methods
 - Example: `TSPSolution` for the Traveling Salesperson Problem in `problems/tsp.py`
 
-3. **Algorithm-Specific Solution Classes**
-- Extend `Solution` and define a generic structure for each optimization algorithm.
-- Requires implementation of methods specific to the optimization algorithm.
-- Example: `HillClimbingSolution` in `algorithms/hill_climbing.py`
+3. **Problem-Algorithm-Specific Solution Classes**
+- Extend a problem solution class and implements methods needed for an optimization algorithm to work
+- Example: `TSPHillClimbingSolution` inherits from `TSPSolution` and implements the `get_neighbors()` method. Available in `problems/tsp.py`.
 
-4. **Problem-Algorithm-Specific Solution Classes**
-- Extend both a problem solution class and an optimization algorithm class.
-- Implements the Algorithm-Specific abstract methods
-- Example: `TSPHillClimbingSolution` inherits from `TSPSolution` and `HillClimbingSolution` available in `problems/tsp.py`.
-
-Besides the Algorithm-Specific Solution Classes, implementations of the optimization algorithms are also available in the `algorithms` directory.
+Implementations of the optimization algorithms are also available in the `algorithms` directory.
 
 ## Adding a New Optimization Problem
 
-To solve a new optimization problem, create a new **problem-specific solution class** that extends `Solution` and that implements the specific `fitness()` and `random_initial_value()` methods for the optimization problem.
+To introduce a new optimization problem:
+
+1. Create a **problem-specific solution class** that extends `Solution`.
+2. This class should implement the `fitness()` and `random_initial_value()` methods specific to the problem.
+
+## Applying an Optimization Algorithm to a New Problem
+
+To optimize a problem using an algorithm:
+
+1. Define a **problem-algorithm-specific solution class** that extends the **problem-specific class**.
+2. Implement the required methods for the chosen optimization algorithm.
+3. Instantiate an initial solution using this class and pass it as an argument to the optimization algorithm function.
 
 
-## Solving a New Optimization Problem using an Optimization Algorithm
 
-Each problem can be optimized using different algorithms by defining a **problem-algorithm-specific solution class** that extends both the **problem-specific** solution class and the **algorithm-specific** solution class.
 
-This class should implement the **algorithm-specific** abstract methods that are left to implement.
 
-An initial solution to the optimization problem can be created using this class, and this inital solution can then be passed as argument to the optimization problem algorithm function.
 

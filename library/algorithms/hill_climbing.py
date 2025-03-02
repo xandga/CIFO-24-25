@@ -1,18 +1,27 @@
 from copy import deepcopy
-from abc import ABC, abstractmethod
+
 from library.solution import Solution
 
-class HillClimbingSolution(Solution, ABC):
-    @abstractmethod
-    def get_neighbors(self):
-        pass
+def hill_climbing(initial_solution: Solution, maximization=False, max_iter=99999, verbose=False):
+    """
+    Implementation of the Hill Climbing optimization algorithm.  
 
+    The algorithm iteratively explores the neighbors of the current solution, moving to a neighbor if it improves the objective function.  
+    The process continues until no improvement is found or the maximum number of iterations is reached.  
 
-def hill_climbing(initial_solution: HillClimbingSolution, maximization=False, max_iter=99999, verbose=False):
+    Args:
+        initial_solution (Solution): The starting solution, which must implement the `fitness()` and `get_neighbors()` methods.
+        maximization (bool, optional): If True, the algorithm maximizes the fitness function; otherwise, it minimizes it. Defaults to False.
+        max_iter (int, optional): The maximum number of iterations allowed before stopping. Defaults to 99,999.
+        verbose (bool, optional): If True, prints progress details during execution. Defaults to False.
 
-    # Verify initial solution type
-    if not isinstance(initial_solution, HillClimbingSolution):
-        raise TypeError("Initial solution must inherit from HillClimbingSolution")
+    Returns:
+        Solution: The best solution found during the search.
+
+    Notes:
+        - The initial_solution must implement a `fitness()` and `get_neighbors()` method.
+        - The algorithm does not guarantee a global optimum; it only finds a local optimum.
+    """
 
     current = initial_solution
     improved = True
@@ -23,7 +32,7 @@ def hill_climbing(initial_solution: HillClimbingSolution, maximization=False, ma
             print(f'Current solution: {current} with fitness {current.fitness()}')
 
         improved = False
-        neighbors = current.get_neighbors()
+        neighbors = current.get_neighbors() # Solution must have a get_neighbors() method
 
         for neighbor in neighbors:
 
