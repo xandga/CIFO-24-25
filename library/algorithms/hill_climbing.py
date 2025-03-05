@@ -23,6 +23,9 @@ def hill_climbing(initial_solution: Solution, maximization=False, max_iter=99999
         - The algorithm does not guarantee a global optimum; it only finds a local optimum.
     """
 
+    # Run some validations to make sure initial solution is well implemented
+    run_validations(initial_solution)
+
     current = initial_solution
     improved = True
     iter = 1
@@ -37,7 +40,7 @@ def hill_climbing(initial_solution: Solution, maximization=False, max_iter=99999
         for neighbor in neighbors:
 
             if verbose:
-                print('Neighbor:', neighbor)
+                print(f'Neighbor: {neighbor} with fitness {neighbor.fitness()}')
 
             if maximization and (neighbor.fitness() >= current.fitness()):
                 current = deepcopy(neighbor)
@@ -51,3 +54,14 @@ def hill_climbing(initial_solution: Solution, maximization=False, max_iter=99999
             break
     
     return current
+
+def run_validations(initial_solution):
+    if not isinstance(initial_solution, Solution):
+        raise TypeError("Initial solution must be an object of a class that inherits from Solution")
+    if not hasattr(initial_solution, "get_neighbors"):
+        print(f"The method 'get_neighbors' must be implemented in the initial soltuion.")
+    neighbors = initial_solution.get_neighbors()
+    if not isinstance(neighbors, list):
+        raise TypeError("get_neighbors method must return a list")
+    if not all([isinstance(neighbor, type(initial_solution)) for neighbor in neighbors]):
+        raise TypeError(f"Neighbors must be of the same type as solution object: {type(initial_solution)}")
