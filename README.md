@@ -6,7 +6,7 @@ Welcome to the repository for the **Computational Intelligence for Optimization*
 This repository is organized as follows:
 
 - /notebooks-class: This folder contains the Jupyter notebooks used in class each week
-- /notebooks-solution: This folder contains the same Jupyter notebooks used in class but with the cells filled with the solutions. You should not edit these notebooks, and instead edit the ones in `notebooks-class`
+- /notebooks-solution: This folder contains the same Jupyter notebooks used in class but with the cells filled with the solutions. YOU SHOULD NOT EDIT THESE NOTEBOOKS, and instead edit the ones in `notebooks-class`
 - /library: The source code for the optimization library we will build throughout the semester. This includes:
    - /algorithms: Functions and classes that implement a variety of optimization algorithms
    - /problems: Classes that define and implement various optimization problems and provide a way to solve them using the algorithms developed
