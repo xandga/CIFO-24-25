@@ -34,7 +34,7 @@ class IntBinSolution(Solution):
         super().__init__(repr=repr)
 
     # Override the superclass's methods
-    def random_initial_value(self):
+    def random_initial_representation(self):
         # Generate random integer between 1 and 15
         random_n = random.randint(1, 15)
         # Transform it into its binary string representation with 4 digits

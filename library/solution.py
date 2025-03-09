@@ -4,7 +4,7 @@ class Solution(ABC):
     def __init__(self, repr=None):
         # To initialize a solution we need to know it's representation. If no representation is given, a solution is randomly initialized.
         if repr == None:
-            repr = self.random_initial_value()
+            repr = self.random_initial_representation()
         # Attributes
         self.repr = repr
 
@@ -18,5 +18,5 @@ class Solution(ABC):
         pass
 
     @abstractmethod
-    def random_initial_value():
+    def random_initial_representation():
         pass
