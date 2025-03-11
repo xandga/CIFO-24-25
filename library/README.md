@@ -6,13 +6,13 @@ The library follows a structured approach:
 
 1. **Abstract Base Class (Solution)**
 - Defines a generic solution structure for all optimization problems.
-- Requires implementation of `fitness()` and `random_initial_value()`.
+- Requires implementation of `fitness()` and `random_initial_representation()`.
 - Defined in `solution.py`
 
 2. **Problem-Specific Solution Classes**
 
 - Extend `Solution` and implement problem-specific methods.
-- Implements the `fitness()` and `random_initial_value()` methods
+- Implements the `fitness()` and `random_initial_representation()` methods
 - Example: `TSPSolution` for the Traveling Salesperson Problem in `problems/tsp.py`
 
 3. **Problem-Algorithm-Specific Solution Classes**
@@ -26,7 +26,7 @@ Implementations of the optimization algorithms are also available in the `algori
 To introduce a new optimization problem:
 
 1. Create a **problem-specific solution class** that extends `Solution`.
-2. This class should implement the `fitness()` and `random_initial_value()` methods specific to the problem.
+2. This class should implement the `fitness()` and `random_initial_representation()` methods specific to the problem.
 
 ## Applying an Optimization Algorithm to a New Problem
 
