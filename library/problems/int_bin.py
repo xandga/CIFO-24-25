@@ -47,18 +47,27 @@ class IntBinSolution(Solution):
 class IntBinHillClimbingSolution(IntBinSolution):
     def get_neighbors(self):
         neighbors = []
-        # Convert binary string to list of bits
-        repr_list = list(self.repr)
 
-        for idx, digit in enumerate(repr_list):
-            neighbor_list_repr = deepcopy(repr_list)
-            
-            if digit == '1':
-                neighbor_list_repr[idx] = '0'
-            elif digit == '0':
-                neighbor_list_repr[idx] = '1'
-            
-            neighbor_repr = "".join(neighbor_list_repr)
-            neighbors.append(IntBinHillClimbingSolution(neighbor_repr))
+        # Edge case: Number 1 ('0001') only has 3 neighbors
+        if self.repr == "0001":
+            neighbors_repr = ["1001", "0101", "0011"]
+            for neighbor_repr in neighbors_repr:
+                neighbors.append(IntBinHillClimbingSolution(repr=neighbor_repr))
+        else:
+            # Convert binary string to list of bits
+            # Strings are not mutable, that's why we are converting to list
+            repr_list = list(self.repr)
+            for idx, digit in enumerate(repr_list):
+                neighbor_list_repr = deepcopy(repr_list)
+                
+                if digit == '1':
+                    neighbor_list_repr[idx] = '0'
+                elif digit == '0':
+                    neighbor_list_repr[idx] = '1'
+                
+                # Convert back to string
+                neighbor_repr = "".join(neighbor_list_repr)
+                # Create neighbor and add it to the list
+                neighbors.append(IntBinHillClimbingSolution(repr=neighbor_repr))
 
         return neighbors

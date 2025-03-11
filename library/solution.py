@@ -18,5 +18,5 @@ class Solution(ABC):
         pass
 
     @abstractmethod
-    def random_initial_representation():
+    def random_initial_representation(self):
         pass
