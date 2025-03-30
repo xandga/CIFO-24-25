@@ -83,8 +83,9 @@ class KSSolution(Solution):
 
 class KSHillClimbingSolution(KSSolution):
     def get_neighbors(self):
-        """A neighbor is obtained by flipping a bit in the representation. This means
-        adding or removing one item from the container"""
+        """Neighbors are obtained by flipping a bit in the representation. This means
+        adding or removing one item from the container. One neighbor is generated for
+        each bit flip."""
         neighbors = []
 
         for idx, bin_value in enumerate(self.repr):
@@ -103,3 +104,23 @@ class KSHillClimbingSolution(KSSolution):
             neighbors.append(neighbor)
 
         return neighbors
+
+class KSSASolution(KSSolution):
+    def get_random_neighbor(self):
+        """A random neighbor is obtained by flipping a random bit in the representation.
+        This means adding or removing one item from the container"""
+        neighbor_repr = deepcopy(self.repr)
+        # Get random index
+        random_idx = random.randint(0, len(self.values)-1)
+        # Bit flip
+        if neighbor_repr[random_idx] == 1:
+            neighbor_repr[random_idx] = 0
+        else:
+            neighbor_repr[random_idx] = 1
+        
+        return KSSASolution(
+            repr=neighbor_repr,
+            values=self.values,
+            weights=self.weights,
+            capacity=self.capacity,
+        )

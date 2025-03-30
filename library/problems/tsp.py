@@ -72,7 +72,7 @@ class TSPSolution(Solution):
 
 class TSPHillClimbingSolution(TSPSolution):
     def get_neighbors(self):
-        """Neighbors are obtained by swaping the positions of two consecutuve cities"""
+        """Neighbors are obtained by swaping the positions of two consecutive cities"""
         neighbors = []
         for i in range(1, len(self.repr)-2):
             new_route = deepcopy(self.repr)
@@ -81,3 +81,17 @@ class TSPHillClimbingSolution(TSPSolution):
             neighbors.append(neighbor)
 
         return neighbors
+
+class TSPSASolution(TSPSolution):
+    def get_random_neighbor(self):
+        """Random neighbor is obtained by swaping the positions of two random consecutive cities"""
+        nr_cities = len(self.distance_matrix)
+
+        # Choose a city idx to switch with the next city 
+        random_city_idx = random.randint(1, nr_cities-3)
+
+        new_route = deepcopy(self.repr)
+        new_route[random_city_idx] = self.repr[random_city_idx+1]
+        new_route[random_city_idx+1] = self.repr[random_city_idx]
+
+        return TSPSASolution(repr=new_route, distance_matrix=self.distance_matrix, starting_idx=self.starting_idx)
