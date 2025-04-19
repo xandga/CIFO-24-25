@@ -49,7 +49,7 @@ def genetic_algorithm(
 
         # 2.2. If using elitism, insert best individual from P into P'
         if elitism:
-            new_population.append(deepcopy(get_best_ind(initial_population, maximization)))
+            new_population.append(deepcopy(get_best_ind(population, maximization)))
         
         # 2.3. Repeat until P' contains N individuals
         while len(new_population) < len(population):
@@ -92,7 +92,7 @@ def genetic_algorithm(
         population = new_population
 
         if verbose:
-            print(f'Final best individual in generation: {get_best_ind(population, maximization)}')
+            print(f'Final best individual in generation: {get_best_ind(population, maximization).fitness()}')
 
     # 3. Return the best individual in P
     return get_best_ind(population, maximization)
