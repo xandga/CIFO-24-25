@@ -124,3 +124,62 @@ class KSSASolution(KSSolution):
             weights=self.weights,
             capacity=self.capacity,
         )
+
+class KSGASolution(KSSolution):
+    def __init__(
+        self,
+        values,
+        weights,
+        capacity,
+        mutation_function, # Callable
+        crossover_function, # Callable
+        repr = None
+    ):
+        super().__init__(
+            values=values,
+            weights=weights,
+            capacity=capacity,
+            repr=repr,
+        )
+
+        # Save as attributes for access in methods
+        self.mutation_function = mutation_function
+        self.crossover_function = crossover_function
+
+    
+    def mutation(self, mut_prob):
+        # Apply mutation function to representation
+        new_repr = self.mutation_function(self.repr, mut_prob)
+        # Create and return individual with mutated representation
+        return KSGASolution(
+            values=self.values,
+            weights=self.weights,
+            capacity=self.capacity,
+            mutation_function=self.mutation_function,
+            crossover_function=self.crossover_function,
+            repr=new_repr
+        )
+
+    def crossover(self, other_solution):
+        # Apply crossover function to self representation and other solution representation
+        offspring1_repr, offspring2_repr = self.crossover_function(self.repr, other_solution.repr)
+
+        # Create and return offspring with new representations
+        return (
+            KSGASolution(
+                values=self.values,
+                weights=self.weights,
+                capacity=self.capacity,
+                mutation_function=self.mutation_function,
+                crossover_function=self.crossover_function,
+                repr=offspring1_repr
+            ),
+            KSGASolution(
+                values=self.values,
+                weights=self.weights,
+                capacity=self.capacity,
+                mutation_function=self.mutation_function,
+                crossover_function=self.crossover_function,
+                repr=offspring2_repr
+            )
+        )
