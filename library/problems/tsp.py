@@ -77,7 +77,7 @@ class TSPHillClimbingSolution(TSPSolution):
         for i in range(1, len(self.repr)-2):
             new_route = deepcopy(self.repr)
             new_route[i], new_route[i+1] = new_route[i+1], new_route[i]
-            neighbor = TSPHillClimbingSolution(route=new_route, distance_matrix=self.distance_matrix)
+            neighbor = TSPHillClimbingSolution(repr=new_route, distance_matrix=self.distance_matrix)
             neighbors.append(neighbor)
 
         return neighbors
@@ -122,7 +122,7 @@ class TSPGASolution(TSPSolution):
         """
         # Apply mutation to the middle route segment
         middle_segment = self.repr[1:-1]  # Exclude starting/ending city
-        mutated_segment = self.mutation_operator(middle_segment, mut_prob)
+        mutated_segment = self.mutation_function(middle_segment, mut_prob)
         new_repr = [self.starting_idx] + mutated_segment + [self.starting_idx]
         
         return TSPGASolution(

@@ -92,3 +92,51 @@ def cycle_crossover(parent1_repr: str | list, parent2_repr: str | list):
         offspring2_repr = "".join(offspring2_repr)
 
     return offspring1_repr, offspring2_repr
+
+
+import random
+
+def swap_crossover(parent1_repr: str | list, parent2_repr: str | list):
+    """
+    A minimal crossover operator for permutation-based genetic algorithms.
+
+    This crossover creates a child by copying one parent, and then:
+    - Randomly selects 1 position.
+    - At the selected position `i`, looks at the value from the other parent.
+    - It finds where that value currently exists in the child.
+    - Then it swaps the value at position `i` with that found value,
+      ensuring the result remains a valid permutation (no duplicates).
+
+    The process is run twice, first starting from parent1 and then parent2,
+    producing two offspring.
+
+    Args:
+        parent1_repr (str or list): The first parent representation.
+        parent2_repr (str or list): The second parent representation.
+            Both parents must have the same length and type.
+
+    Returns:
+        tuple: Two offspring permutations resulting from the crossover.
+    """
+    size = len(parent1_repr)
+    offspring1_repr = parent1_repr.copy()
+    offspring2_repr = parent1_repr.copy()
+
+    def swap(parent1_repr, parent2_repr):
+        offspring_repr = parent1_repr.copy()
+        # Randomly choose 1 position to perform a swap
+        swap_positions = random.sample(range(size), 1)
+
+        for pos in swap_positions:
+            val_from_p2 = parent2_repr[pos]           # Get the value from the second parent
+            index_in_child = offspring_repr.index(val_from_p2)  # Where is that value in the child?
+
+            # Swap positions to bring val_from_p2 into pos
+            offspring_repr[pos], offspring_repr[index_in_child] = offspring_repr[index_in_child], offspring_repr[pos]
+
+        return offspring_repr
+    
+    offspring1_repr = swap(parent1_repr=parent1_repr, parent2_repr=parent2_repr)
+    offspring2_repr = swap(parent1_repr=parent2_repr, parent2_repr=parent1_repr)
+
+    return offspring1_repr, offspring2_repr
