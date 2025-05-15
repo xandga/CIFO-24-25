@@ -83,8 +83,9 @@ class KSSolution(Solution):
 
 class KSHillClimbingSolution(KSSolution):
     def get_neighbors(self):
-        """A neighbor is obtained by flipping a bit in the representation. This means
-        adding or removing one item from the container"""
+        """Neighbors are obtained by flipping a bit in the representation. This means
+        adding or removing one item from the container. One neighbor is generated for
+        each bit flip."""
         neighbors = []
 
         for idx, bin_value in enumerate(self.repr):
@@ -103,3 +104,82 @@ class KSHillClimbingSolution(KSSolution):
             neighbors.append(neighbor)
 
         return neighbors
+
+class KSSASolution(KSSolution):
+    def get_random_neighbor(self):
+        """A random neighbor is obtained by flipping a random bit in the representation.
+        This means adding or removing one item from the container"""
+        neighbor_repr = deepcopy(self.repr)
+        # Get random index
+        random_idx = random.randint(0, len(self.values)-1)
+        # Bit flip
+        if neighbor_repr[random_idx] == 1:
+            neighbor_repr[random_idx] = 0
+        else:
+            neighbor_repr[random_idx] = 1
+        
+        return KSSASolution(
+            repr=neighbor_repr,
+            values=self.values,
+            weights=self.weights,
+            capacity=self.capacity,
+        )
+
+class KSGASolution(KSSolution):
+    def __init__(
+        self,
+        values,
+        weights,
+        capacity,
+        mutation_function, # Callable
+        crossover_function, # Callable
+        repr = None
+    ):
+        super().__init__(
+            values=values,
+            weights=weights,
+            capacity=capacity,
+            repr=repr,
+        )
+
+        # Save as attributes for access in methods
+        self.mutation_function = mutation_function
+        self.crossover_function = crossover_function
+
+    
+    def mutation(self, mut_prob):
+        # Apply mutation function to representation
+        new_repr = self.mutation_function(self.repr, mut_prob)
+        # Create and return individual with mutated representation
+        return KSGASolution(
+            values=self.values,
+            weights=self.weights,
+            capacity=self.capacity,
+            mutation_function=self.mutation_function,
+            crossover_function=self.crossover_function,
+            repr=new_repr
+        )
+
+    def crossover(self, other_solution):
+        # Apply crossover function to self representation and other solution representation
+        offspring1_repr, offspring2_repr = self.crossover_function(self.repr, other_solution.repr)
+
+        # Create and return offspring with new representations
+        return (
+            KSGASolution(
+                values=self.values,
+                weights=self.weights,
+                capacity=self.capacity,
+                mutation_function=self.mutation_function,
+                crossover_function=self.crossover_function,
+                repr=offspring1_repr
+            ),
+            KSGASolution(
+                values=self.values,
+                weights=self.weights,
+                capacity=self.capacity,
+                mutation_function=self.mutation_function,
+                crossover_function=self.crossover_function,
+                repr=offspring2_repr
+            )
+        )

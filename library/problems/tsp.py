@@ -72,12 +72,95 @@ class TSPSolution(Solution):
 
 class TSPHillClimbingSolution(TSPSolution):
     def get_neighbors(self):
-        """Neighbors are obtained by swaping the positions of two consecutuve cities"""
+        """Neighbors are obtained by swaping the positions of two consecutive cities"""
         neighbors = []
         for i in range(1, len(self.repr)-2):
             new_route = deepcopy(self.repr)
             new_route[i], new_route[i+1] = new_route[i+1], new_route[i]
-            neighbor = TSPHillClimbingSolution(route=new_route, distance_matrix=self.distance_matrix)
+            neighbor = TSPHillClimbingSolution(repr=new_route, distance_matrix=self.distance_matrix)
             neighbors.append(neighbor)
 
         return neighbors
+
+class TSPSASolution(TSPSolution):
+    def get_random_neighbor(self):
+        """Random neighbor is obtained by swaping the positions of two random consecutive cities"""
+        nr_cities = len(self.distance_matrix)
+
+        # Choose a city idx to switch with the next city 
+        random_city_idx = random.randint(1, nr_cities-3)
+
+        new_route = deepcopy(self.repr)
+        new_route[random_city_idx] = self.repr[random_city_idx+1]
+        new_route[random_city_idx+1] = self.repr[random_city_idx]
+
+        return TSPSASolution(repr=new_route, distance_matrix=self.distance_matrix, starting_idx=self.starting_idx)
+    
+class TSPGASolution(TSPSolution):
+    def __init__(
+        self,
+        distance_matrix,
+        starting_idx,
+        mutation_function, # Callable
+        crossover_function, # Callable
+        repr = None,
+    ):
+        # Save as attributes for access in methods
+        self.mutation_function = mutation_function
+        self.crossover_function = crossover_function
+
+        super().__init__(
+            distance_matrix=distance_matrix,
+            starting_idx=starting_idx,
+            repr=repr,
+        )
+    
+    def mutation(self, mut_prob):
+        """
+        Applies the provided mutation operator to the middle portion 
+        of the route (excluding start and end cities).
+        """
+        # Apply mutation to the middle route segment
+        middle_segment = self.repr[1:-1]  # Exclude starting/ending city
+        mutated_segment = self.mutation_function(middle_segment, mut_prob)
+        new_repr = [self.starting_idx] + mutated_segment + [self.starting_idx]
+        
+        return TSPGASolution(
+            distance_matrix=self.distance_matrix,
+            starting_idx=self.starting_idx,
+            mutation_function=self.mutation_function,
+            crossover_function=self.crossover_function,
+            repr=new_repr
+        )
+
+    def crossover(self, other_solution):
+        """
+        Applies the provided crossover operator to the middle portions
+        of two parent routes (excluding start/end cities), and returns
+        two new offspring solutions.
+        """
+        # Apply crossover to the middle route segment of the parents
+        parent1_middle = self.repr[1:-1]
+        parent2_middle = other_solution.repr[1:-1]
+
+        offspring1_middle, offspring2_middle = self.crossover_function(parent1_middle, parent2_middle)
+
+        offspring1_repr = [self.starting_idx] + offspring1_middle + [self.starting_idx]
+        offspring2_repr = [self.starting_idx] + offspring2_middle + [self.starting_idx]
+
+        return (
+            TSPGASolution(
+                distance_matrix=self.distance_matrix,
+                starting_idx=self.starting_idx,
+                mutation_function=self.mutation_function,
+                crossover_function=self.crossover_function,
+                repr=offspring1_repr
+            ),
+            TSPGASolution(
+                distance_matrix=self.distance_matrix,
+                starting_idx=self.starting_idx,
+                mutation_function=self.mutation_function,
+                crossover_function=self.crossover_function,
+                repr=offspring2_repr
+            )
+        )
